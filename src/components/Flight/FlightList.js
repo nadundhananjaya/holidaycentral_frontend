@@ -1,5 +1,8 @@
 import react, {useEffect, useState} from "react";
 import NavigationBar from "../NavigationBar/NavigationBar";
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const getCurrentDate = () => {
     const inputDate = new Date().toLocaleDateString();
@@ -34,7 +37,7 @@ const FlightList = () => {
     const [cabinClass, setCabinClass] = useState('Economy')
 
     const loadFlightList = async () => {
-        const response = await fetch('http://192.168.1.240:8080/flight/list', {
+        const response = await fetch('http://localhost:8080/flight/list', {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "cors", // no-cors, *cors, same-origin
             cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -76,6 +79,30 @@ const FlightList = () => {
     const arrivalDateChangeHandler = (event) => {
         setArrivalTime(event.target.value)
     }
+
+    const addCart = (newCartObject) => {
+        const cartItems = localStorage.getItem("cart_items")
+
+        if (cartItems === null) {
+            const newItem = [newCartObject]
+            localStorage.setItem("cart_items", JSON.stringify(newItem));
+            toast("Successfully added to cart !");
+        } else {
+            const cartArray = JSON.parse(cartItems)
+            const hasNewItem = cartArray.some(obj => obj._id === newCartObject._id);
+
+            if (hasNewItem === true) {
+                toast("Already Added to the Cart !");
+                console.log("Already added !!!")
+            } else {
+
+                const newItems = JSON.stringify([...cartArray, newCartObject])
+                localStorage.setItem("cart_items", newItems);
+                toast("Successfully added to cart !");
+            }
+        }
+    }
+
     useEffect(() => {
         loadFlightList()
     }, [arrivalAirport, departureAirport, cabinClass, departureTime, arrivalTime]);
@@ -201,7 +228,7 @@ const FlightList = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <a href="#" className="btn btn-dark float-end mt-4">Book Flight</a>
+                                    <button onClick={() => addCart(flight)} className="btn btn-dark float-end mt-4">Book Flight</button>
                                 </div>
                             </div>
                         </div>
