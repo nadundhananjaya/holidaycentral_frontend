@@ -236,6 +236,7 @@ const HotelList = () => {
                 )}
             </div>
         </div>
+        <ToastContainer/>
     </>
 }
 export default HotelList
