@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Login/>,
+        element: <FlightList/>,
       },
       //   Flight Routes
       {
