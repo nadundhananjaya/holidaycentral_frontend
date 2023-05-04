@@ -1,6 +1,7 @@
 import react, {useEffect, useState} from "react";
 import NavigationBar from "../NavigationBar/NavigationBar";
-
+import {toast, ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const getCurrentDate = () => {
     const inputDate = new Date().toLocaleDateString();
@@ -20,7 +21,6 @@ const getDayAfterWeek = () => {
     const month = parts[1].padStart(2, '0');
     const day = parts[0].padStart(2, '0');
     const formatedDate = `${year}-${month}-${day}`;
-    console.log(formatedDate)
     return formatedDate
 }
 
@@ -33,17 +33,21 @@ function dateDiffInDays(a, b) {
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+const onlyUnique = (value, index, array) => {
+    return array.indexOf(value) === index;
+}
 const HotelList = () => {
-
 
     const [hotelList, setHotelList] = useState([])
 
     const [checkInDate, setCheckInDate] = useState(getCurrentDate());
     const [checkOutDate, setCheckOutDate] = useState(getDayAfterWeek())
+    const [starRating, setStarRating] = useState(5);
     const [destination, setDestination] = useState('Colombo')
 
+    const [cityList, setCityList] = useState([]);
     const loadHotelList = async () => {
-        const response = await fetch('http://192.168.1.240:8080/hotel/list', {
+        const response = await fetch('http://localhost:8080/hotel/list', {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "cors", // no-cors, *cors, same-origin
             cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -58,12 +62,49 @@ const HotelList = () => {
                 "checkInDate": checkInDate,
                 "checkOutDate": checkOutDate,
                 "destination": destination,
+                "starRating": starRating,
             })
         });
+
         const data = await response.json();
         setHotelList(data)
     }
 
+    const loadCityList = () => {
+        const cities = [];
+        hotelList.map((hotel,index)=> {
+            cities.push(hotel.city)
+        });
+        const uniqueCities = cities.filter(onlyUnique)
+        setCityList(uniqueCities)
+    }
+
+    useEffect(() => {
+        loadCityList()
+    },[hotelList])
+
+    const addCart = (newCartObject) => {
+        const cartItems = localStorage.getItem("cart_items")
+
+        if (cartItems === null) {
+            const newItem = [newCartObject]
+            localStorage.setItem("cart_items", JSON.stringify(newItem));
+            toast("Successfully added to cart !");
+        } else {
+            const cartArray = JSON.parse(cartItems)
+            const hasNewItem = cartArray.some(obj => obj._id === newCartObject._id);
+
+            if (hasNewItem === true) {
+                toast("Already Added to the Cart !");
+                console.log("Already added !!!")
+            } else {
+
+                const newItems = JSON.stringify([...cartArray, newCartObject])
+                localStorage.setItem("cart_items", newItems);
+                toast("Successfully added to cart !");
+            }
+        }
+    }
 
     const checkinDateChangeHandler = (event) => {
         setCheckInDate(event.target.value)
@@ -76,9 +117,13 @@ const HotelList = () => {
     const destinationChangeHandler = (event) => {
         setDestination(event.target.value)
     }
+
+    const starRatingHandler = (event) => {
+        setStarRating(event.target.value)
+    }
     useEffect(() => {
         loadHotelList()
-    }, [checkInDate, checkOutDate, destination]);
+    }, [checkInDate, checkOutDate, destination,starRating]);
 
     return <>
         <NavigationBar/>
@@ -124,9 +169,29 @@ const HotelList = () => {
                             value={destination}
                             onChange={destinationChangeHandler}
                         >
-                            <option value="Colombo">Colombo</option>
-                            <option value="Kandy">Kandy</option>
-                            <option value="Anuradhapura">Anuradhapura</option>
+
+                            {cityList.map((city, index) => {
+                                return <option key={index} value={city}>{city}</option>
+                            })}
+
+                        </select>
+                    </div>
+
+                    <div className={`col-12 col-lg-4 mb-3`}>
+                        <label htmlFor="exampleInputPassword1" className="form-label">Star Rating</label>
+
+                        <select
+                            name="classType"
+                            id="classType"
+                            className="form-select dropdown"
+                            value={starRating}
+                            onChange={starRatingHandler}
+                        >
+                            <option value="1">Star Rating 1</option>
+                            <option value="2">Star Rating 2</option>
+                            <option value="3">Star Rating 3</option>
+                            <option value="4">Star Rating 4</option>
+                            <option value="5">Star Rating 5</option>
                         </select>
                     </div>
 
@@ -176,7 +241,9 @@ const HotelList = () => {
 
                                         </div>
                                     </div>
-                                    <a href="#" className="btn btn-dark float-end mt-4">Book Hotel</a>
+                                    <button onClick={() => addCart(hotel)} href="#"
+                                            className="btn btn-dark float-end mt-4">Book Hotel
+                                    </button>
                                 </div>
                             </div>
                         </div>
