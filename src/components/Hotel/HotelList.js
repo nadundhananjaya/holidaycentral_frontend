@@ -131,11 +131,8 @@ const HotelList = () => {
         <div className={`card mt-5 ring`}>
             <div className={`card-body`}>
                 <div className={`row`}>
-
-
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Checkin Date</label>
-
                         <input
                             onChange={checkinDateChangeHandler}
                             value={checkInDate}
@@ -148,7 +145,6 @@ const HotelList = () => {
 
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Checkout Date</label>
-
                         <input
                             onChange={checkOutDateChangeHandler}
                             type="date"
@@ -161,7 +157,6 @@ const HotelList = () => {
 
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Destination</label>
-
                         <select
                             name="classType"
                             id="classType"
@@ -169,7 +164,6 @@ const HotelList = () => {
                             value={destination}
                             onChange={destinationChangeHandler}
                         >
-
                             {cityList.map((city, index) => {
                                 return <option key={index} value={city}>{city}</option>
                             })}
@@ -179,7 +173,6 @@ const HotelList = () => {
 
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Star Rating</label>
-
                         <select
                             name="classType"
                             id="classType"
@@ -195,7 +188,6 @@ const HotelList = () => {
                         </select>
                     </div>
 
-
                     <div className={`col-12 mt-3`}>
                         <div className="d-grid gap-2">
                             <button type="submit" className="btn btn-dark">Hotel Search</button>
@@ -208,45 +200,42 @@ const HotelList = () => {
         <div className={`mt-5`}>
             <div className={`row g-3`}>
                 {hotelList.map((hotel, index) => {
-                        const rooms = hotel.rooms;
-                        const lowestPrice = Math.min(...rooms.map(item => parseInt(item.pricePerNight)));
-                        const noOfDays = dateDiffInDays(new Date(checkInDate), new Date(checkOutDate))
+                    const rooms = hotel.rooms;
+                    const lowestPrice = Math.min(...rooms.map(item => parseInt(item.pricePerNight)));
+                    const noOfDays = dateDiffInDays(new Date(checkInDate), new Date(checkOutDate))
 
-                        const facilities = hotel.facilities.join(',')
-                        return <div key={index} className={` col-12 col-lg-6`}>
-                            <div className={`card m-1`}>
-                                <div className="card-body">
-                                    <h5 className="card-title mb-4">{hotel.hotelName}</h5>
-                                    <p>Star Rating : {hotel.starRating}</p>
-
-                                    <p>Contact No : {hotel.contact}</p>
-                                    <div className={`row`}>
-                                        <div className={`col-12 px-3`}>
-                                            <p className={`text-start`}>
-                                                Booking Starting from <strong>Rs. {lowestPrice * noOfDays}</strong>
-                                            </p>
-                                            <p className={`text-start`}>
-                                                Bill Per Day Starting from <strong>Rs. {lowestPrice}</strong>
-                                            </p>
-                                        </div>
+                    const facilities = hotel.facilities.join(',')
+                    return <div key={index} className={` col-12 col-lg-6`}>
+                        <div className={`card m-1`}>
+                            <div className="card-body">
+                                <h5 className="card-title mb-4">{hotel.hotelName}</h5>
+                                <p>Star Rating : {hotel.starRating}</p>
+                                <p>Contact No : {hotel.contact}</p>
+                                <div className={`row`}>
+                                    <div className={`col-12 px-3`}>
+                                        <p className={`text-start`}>
+                                           Booking Starting from <strong>Rs. {lowestPrice * noOfDays}</strong>
+                                        </p>
+                                        <p className={`text-start`}>
+                                            Bill Per Day Starting from <strong>Rs. {lowestPrice}</strong>
+                                        </p>
                                     </div>
-
-                                    <div className={`row`}>
-                                        <div className={`col-12 px-3`}>
-                                            <p className={`text-start`}>
-                                                Facilities : <strong>{
-                                                facilities
-                                            }</strong>
-                                            </p>
-
-                                        </div>
-                                    </div>
-                                    <button onClick={() => addCart(hotel)} href="#"
-                                            className="btn btn-dark float-end mt-4">Book Hotel
-                                    </button>
                                 </div>
+                                <div className={`row`}>
+                                    <div className={`col-12 px-3`}>
+                                        <p className={`text-start`}>
+                                            Facilities : <strong>{
+                                            facilities
+                                            }</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <button onClick={() => addCart(hotel)} href="#"
+                                        className="btn btn-dark float-end mt-4">Book Hotel
+                                </button>
                             </div>
                         </div>
+                    </div>
                     }
                 )}
             </div>
