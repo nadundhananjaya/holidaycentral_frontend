@@ -38,6 +38,7 @@ const onlyUnique = (value, index, array) => {
 }
 const HotelList = () => {
 
+
     const [hotelList, setHotelList] = useState([])
 
     const [checkInDate, setCheckInDate] = useState(getCurrentDate());
@@ -142,7 +143,6 @@ const HotelList = () => {
                             placeholder="01/01/2000"
                         />
                     </div>
-
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Checkout Date</label>
                         <input
@@ -154,7 +154,6 @@ const HotelList = () => {
                             placeholder="01/01/2000"
                         />
                     </div>
-
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Destination</label>
                         <select
@@ -170,7 +169,6 @@ const HotelList = () => {
 
                         </select>
                     </div>
-
                     <div className={`col-12 col-lg-4 mb-3`}>
                         <label htmlFor="exampleInputPassword1" className="form-label">Star Rating</label>
                         <select
@@ -187,7 +185,6 @@ const HotelList = () => {
                             <option value="5">Star Rating 5</option>
                         </select>
                     </div>
-
                     <div className={`col-12 mt-3`}>
                         <div className="d-grid gap-2">
                             <button type="submit" className="btn btn-dark">Hotel Search</button>
@@ -203,7 +200,6 @@ const HotelList = () => {
                     const rooms = hotel.rooms;
                     const lowestPrice = Math.min(...rooms.map(item => parseInt(item.pricePerNight)));
                     const noOfDays = dateDiffInDays(new Date(checkInDate), new Date(checkOutDate))
-
                     const facilities = hotel.facilities.join(',')
                     return <div key={index} className={` col-12 col-lg-6`}>
                         <div className={`card m-1`}>
@@ -214,7 +210,7 @@ const HotelList = () => {
                                 <div className={`row`}>
                                     <div className={`col-12 px-3`}>
                                         <p className={`text-start`}>
-                                           Booking Starting from <strong>Rs. {lowestPrice * noOfDays}</strong>
+                                            Booking Starting from <strong>Rs. {lowestPrice * noOfDays}</strong>
                                         </p>
                                         <p className={`text-start`}>
                                             Bill Per Day Starting from <strong>Rs. {lowestPrice}</strong>
@@ -231,12 +227,12 @@ const HotelList = () => {
                                     </div>
                                 </div>
                                 <button onClick={() => addCart(hotel)} href="#"
-                                        className="btn btn-dark float-end mt-4">Book Hotel
+                                    className="btn btn-dark float-end mt-4">Book Hotel
                                 </button>
                             </div>
                         </div>
                     </div>
-                    }
+                }
                 )}
             </div>
         </div>
